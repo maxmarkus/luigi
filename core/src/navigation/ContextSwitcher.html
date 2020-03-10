@@ -39,6 +39,22 @@
             {/if} {/each}
           </ul>
           {/if}
+          {#if options && options.length > 0}
+          <ul class="fd-menu__list" id="context_menu_search">
+            <div class="fd-combobox-control">
+              <div class="fd-input-group fd-input-group--after">
+                <input
+                  type="text"
+                  class="fd-input"
+                  bind:value="{filterValue}"
+                  on:keyup="{() => setFilteredOptions(filterValue)}"
+                  placeholder="{$getTranslation('Filter ...')}"
+                  on:click|stopPropagation="{() => {}}"
+                >
+              </div>
+            </div>
+          </ul>
+          {/if}
           <ul class="fd-menu__list" id="context_menu_middle">
             {#if options && options.length === 0}
             <li>
@@ -46,9 +62,7 @@
                 <div></div>
               </div>
             </li>
-            {/if} {#if options && options.length} {#each options as node}
-            {#await getNodeName(node.label, config.fallbackLabelResolver,
-            node.id)} {:then label}
+            {/if} {#if filteredOptions && filteredOptions.length} {#each filteredOptions as node}
             <li
               on:click="{() => goToOption(node, selectedOption)}"
               data-testid="{getTestId(node)}"
@@ -60,11 +74,11 @@
                 href="{getRouteLink(node)}"
                 on:click|preventDefault="{() => {}}"
                 class="fd-menu__item {node.label === selectedLabel ? 'is-selected' : ''}"
-                title="{label}"
-              >{label}</a>
+                title="{node._asyncLabel}"
+              >{node._asyncLabel}</a>
               {/if}
             </li>
-            {/await} {/each} {/if}
+            {/each} {/if}
           </ul>
           {#if actions && actions.length}
           <ul class="fd-menu__list fd-menu__list--bottom">
@@ -125,6 +139,18 @@
   );
   let store = getContext('store');
   let getTranslation = getContext('getTranslation');
+  let filterValue;
+  let filteredOptions;
+
+  function setFilteredOptions(value) {
+    filteredOptions =
+      options &&
+      options.filter(o => filterValueMatches(o._asyncLabel || o.label, value));
+  }
+
+  function filterValueMatches(label = '', value) {
+    return !value || label.toLowerCase().indexOf(value.toLowerCase()) !== -1;
+  }
 
   onMount(async () => {
     StateHelpers.doOnStoreChange(
@@ -146,6 +172,7 @@
           : undefined;
         config = contextSwitcherConfig;
         options = undefined;
+        filteredOptions = undefined;
         if (contextSwitcherConfig) {
           alwaysShowDropdown =
             contextSwitcherConfig.alwaysShowDropdown !== false; // default is true
@@ -179,6 +206,7 @@
       if (!IframeHelpers.getValidMessageSource(e)) return;
       if (e.data && e.data.msg === 'luigi.refresh-context-switcher') {
         options = null;
+        filteredOptions = null;
         fetchOptions();
       }
     });
@@ -204,7 +232,21 @@
   // [svelte-upgrade suggestion]
   // review these functions and remove unnecessary 'export' keywords
   export async function fetchOptions() {
-    options = await ContextSwitcherHelpers.fetchOptions(options);
+    const rawOptions = await ContextSwitcherHelpers.fetchOptions(options);
+
+    options = await Promise.all(
+      rawOptions.map(async node => {
+        const label = await getNodeName(
+          node.label,
+          config.fallbackLabelResolver,
+          node.id
+        );
+        node._asyncLabel = label;
+        return node;
+      })
+    );
+    filteredOptions = options;
+
     const conf = config || {};
     const parentNodePath = conf.parentNodePath;
     const fallbackLabelResolver = conf.fallbackLabelResolver;
