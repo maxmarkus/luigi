@@ -44,19 +44,34 @@ runWebserver() {
 
   echo "Webserver running with PID $PID"
   # wait until example is built and running
+  waitForServer "http://localhost:${PORTß}${TESTPATH}"
+  echo ""
+  echo "Webserver was ready after $WAITCOUNT seconds"
+}
+
+#
+# waitForServer
+# waitForServer http://localhost:4200/luigi-core/luigi.js
+# waitForServer http://localhost:4200/luigi-core/luigi.js 60
+#
+waitForServer() {
   local SLEEPSECS=1 # sleep time between webserver availability check
   local WAITCOUNT=0
-  until $(curl --output /dev/null --silent --head --fail http://localhost:$PORT$TESTPATH); do
-    if [ $WAITCOUNT -gt 15 ]; then
-      echo "Starting Webserver on $PORT timed out."
+  local URL=$1
+  if [ -z "$2" ]; then
+    MAXWAITCOUNT=15
+  else
+    MAXWAITCOUNT=$2
+  fi
+  until $(curl --output /dev/null --silent --fail $URL); do
+    if [ $WAITCOUNT -gt $MAXWAITCOUNT ]; then
+      echo "Starting Webserver timed out."
       exit 1;
     fi
     printf '.'
     sleep $SLEEPSECS
     WAITCOUNT=$(($WAITCOUNT + $SLEEPSECS))
   done
-  echo ""
-  echo "Webserver was ready after $WAITCOUNT seconds"
 }
 
 #

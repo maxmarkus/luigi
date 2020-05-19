@@ -1,0 +1,12 @@
+{
+  "baseUrl": "http://about:blank",
+  "fixturesFolder": "fixtures",
+  "integrationFolder": "tests",
+  "pluginsFile": false,
+  "supportFile": "commands/commands.js",
+  "videosFolder": "videos",
+  "screenshotsFolder": "screenshots",
+  "chromeWebSecurity": false,
+  "viewportWidth": 1250,
+  "viewportHeight": 790
+}

@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Angular",
+    "script": "angular.sh",
+    "baseurl": "http://127.0.0.1:4200",
+    "healthyurl": "http://127.0.0.1:4200/luigi-core/luigi.js",
+    "waitafterhealthy": 15
+  },
+  {
+    "name": "No framework",
+    "script": "no-framework.sh",
+    "baseurl": "http://127.0.0.1:8080",
+    "healthyurl": "http://127.0.0.1:8080/luigi-core/luigi.js",
+    "waitafterhealthy": 5
+  }
+]
