@@ -8,7 +8,7 @@ source $base_dir/../../shared/bashHelpers.sh
 tmp_dir="/tmp/setuptests" # it is repeated on line 19
 setup_dir=$base_dir/../../../scripts/setup
 
-testcases_json=`cat setup-testcases.json`
+testcases_json=`cat ${base_dir}/setup-testcases.json`
 testcases_length=`echo $testcases_json | jq '. | length'`
 
 echoe "Testcases found: $testcases_length"
@@ -65,15 +65,12 @@ for ((i=0; i<$testcases_length; i++)); do
   sleep $test_waitafterhealthy # server is online a bit earlier most of the time (eg. with npm start)
   cd $base_dir/e2e
   {
-    $setup_dir/../node_modules/.bin/cypress run --config baseUrl=$test_baseurl &
-    echoe "E2E pid: $!"
-    pids+=($!)
+    $setup_dir/../node_modules/.bin/cypress run --config baseUrl=$test_baseurl
   } || {
     echoe "E2E exception: @ $__EXCEPTION_LINE__"
     killpids
   }
 
-  kill -9 $PID
   if [ -d "${tmp_dir}/${test_folder}" ]; then
     rm -rf ${tmp_dir}/${test_folder}
   fi
