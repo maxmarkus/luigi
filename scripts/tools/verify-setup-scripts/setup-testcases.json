@@ -1,5 +1,13 @@
 [
   {
+    "name": "Vue",
+    "script": "vue.sh",
+    "baseurl": "http://127.0.0.1:8080",
+    "healthyurl": "http://127.0.0.1:8080/luigi-core/luigi.js",
+    "waitafterhealthy": 5,
+    "webserverport": 8080
+  },
+  {
     "name": "No framework",
     "script": "no-framework.sh",
     "baseurl": "http://127.0.0.1:8080",

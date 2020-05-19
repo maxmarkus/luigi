@@ -7,12 +7,12 @@ describe('Basic tests', () => {
     it('Verify dirty status and navigation', () => {
       cy.get('.fd-shellbar').should('be.visible');
 
-      cy.wait(50); // Luigi initialization takes its time
+      cy.wait(100); // Luigi initialization takes its time
       cy.getIframeWindow().then(win => {
         cy.log('setDirtyStatus true');
         win.LuigiClient.uxManager().setDirtyStatus(true);
       });
-      cy.wait(50); // Post message processing time
+      cy.wait(100); // Post message processing time
 
       cy.window().then(win => {
         cy.log('Trying to navigate away');

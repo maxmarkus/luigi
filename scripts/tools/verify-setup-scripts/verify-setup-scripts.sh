@@ -42,10 +42,6 @@ killpids() {
 # exit 0
 
 for ((i=0; i<$testcases_length; i++)); do
-  if [ $i -gt 0 ]; then
-    echoe "Should run only after first successful stetup"
-    exit 0
-  fi
   _jq() {
     # grabs a value by key from the current element
     echo ${testcases_json} | jq -r ".[${i}]${1}"
@@ -100,3 +96,5 @@ for ((i=0; i<$testcases_length; i++)); do
   fi
   echoe "Successfully tested ${test_name}"
 done
+
+echoe "All setups tested successfully"
