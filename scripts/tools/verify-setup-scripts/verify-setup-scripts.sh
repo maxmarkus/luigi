@@ -11,13 +11,13 @@ testcases_length=`echo $testcases_json | jq '. | length'`
 
 echoe "Testcases found: $testcases_length"
 
-if [ ! -d $tmp_dir ]; then
-  echoe "Creating temp dir: $tmp_dir"
-  mkdir -p $tmp_dir
-else
+if [ -d $tmp_dir ]; then
   echoe "Start with a fresh temp dir in: $tmp_dir"
   # For sake of security, not using a variable here.
   rm -rf "/tmp/setuptests/*"
+else
+  echoe "Creating temp dir: $tmp_dir"
+  mkdir -p $tmp_dir
 fi
 
 declare -a pids
@@ -41,11 +41,19 @@ killpids() {
 # done
 # exit 0
 
+lastInstallComplete=1
+
 for ((i=0; i<$testcases_length; i++)); do
   _jq() {
     # grabs a value by key from the current element
     echo ${testcases_json} | jq -r ".[${i}]${1}"
   }
+
+  if [ $lastInstallComplete == 0 ]; then
+    echoe "Previous install (${($i-1)}) did not complete."
+    exit 1;
+  fi
+  lastInstallComplete=0
   
   test_folder="setup${i}"
   test_name=$(_jq '.name')
@@ -95,6 +103,7 @@ for ((i=0; i<$testcases_length; i++)); do
     rm -rf ${tmp_dir}/${test_folder}
   fi
   echoe "Successfully tested ${test_name}"
+  lastInstallComplete=1
 done
 
 echoe "All setups tested successfully"
