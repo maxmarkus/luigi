@@ -45,10 +45,25 @@ integration-testing: &integration-testing
 nightly-example-testing: &nightly-example-testing
     if: type = cron
     script:
+      - export CYPRESS_CACHE_FOLDER=$TRAVIS_BUILD_DIR/cypress-binary-cache
       - $TRAVIS_BUILD_DIR/scripts/tools/verify-setup-scripts/verify-setup-scripts.sh 1
-    before_cache:
-      - rm -rf ~/.npm/_logs
-      - rm -rf ~/.npm/_cacache
+  addons:
+    apt:
+      packages:
+        # Ubuntu 16+ does not install this dependency by default, so we need to install it ourselves
+        - libgconf-2-4
+        #- chromium-browser=79.0.3945.130-0ubuntu0.16.04.1 # update also if you upgrade from Xenial
+    # chrome: beta
+    chrome: stable
+  before_install:
+    # - chromium-browser --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
+    # - google-chrome-beta --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
+    - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
+  before_cache:
+    - rm -rf ~/.npm/_logs
+    - rm -rf ~/.npm/_cacache
+    - rm -rf ~/.cache/Cypress/cy/production/browsers #it is individual for each run anyway so caching it slows down the job
+
 
 jobs:
   include:
@@ -160,26 +175,31 @@ jobs:
     - name: 'No framework'
       <<: *nightly-example-testing
       script:
+        - export CYPRESS_CACHE_FOLDER=$TRAVIS_BUILD_DIR/cypress-binary-cache
         - $TRAVIS_BUILD_DIR/scripts/tools/verify-setup-scripts/verify-setup-scripts.sh 0
 
     # - name: 'Vue'
     #   # only working after merge
     #   <<: *nightly-example-testing
     #   script:
+    #     - export CYPRESS_CACHE_FOLDER=$TRAVIS_BUILD_DIR/cypress-binary-cache
     #     - $TRAVIS_BUILD_DIR/scripts/tools/verify-setup-scripts/verify-setup-scripts.sh 1
 
-    - name: 'React'
-      # not working because of development server not starting properly
-      <<: *nightly-example-testing
-      script:
-        - $TRAVIS_BUILD_DIR/scripts/tools/verify-setup-scripts/verify-setup-scripts.sh 2
+    # - name: 'React'
+    #   # not working because of development server not starting properly
+    #   <<: *nightly-example-testing
+    #   script:
+    #     - export CYPRESS_CACHE_FOLDER=$TRAVIS_BUILD_DIR/cypress-binary-cache
+    #     - $TRAVIS_BUILD_DIR/scripts/tools/verify-setup-scripts/verify-setup-scripts.sh 2
 
-    - name: 'Angular'
-      <<: *nightly-example-testing
-      script:
-        - $TRAVIS_BUILD_DIR/scripts/tools/verify-setup-scripts/verify-setup-scripts.sh 3
+    # - name: 'Angular'
+    #   <<: *nightly-example-testing
+    #   script:
+    #     - export CYPRESS_CACHE_FOLDER=$TRAVIS_BUILD_DIR/cypress-binary-cache
+    #     - $TRAVIS_BUILD_DIR/scripts/tools/verify-setup-scripts/verify-setup-scripts.sh 3
 
-    - name: 'OpenUI5'
-      <<: *nightly-example-testing
-      script:
-        - $TRAVIS_BUILD_DIR/scripts/tools/verify-setup-scripts/verify-setup-scripts.sh 4
+    # - name: 'OpenUI5'
+    #   <<: *nightly-example-testing
+    #   script:
+    #     - export CYPRESS_CACHE_FOLDER=$TRAVIS_BUILD_DIR/cypress-binary-cache
+    #     - $TRAVIS_BUILD_DIR/scripts/tools/verify-setup-scripts/verify-setup-scripts.sh 4

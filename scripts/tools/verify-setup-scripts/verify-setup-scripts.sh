@@ -33,7 +33,6 @@ else
   mkdir -p $tmp_dir
 fi
 
-
 declare -a pids
 
 killpids() {
@@ -96,12 +95,23 @@ for ((i=0; i<$testcases_length; i++)); do
     exit 1
   }
 
+  # cd $tmp_dir/$test_folder
+  # echoe "Installing Cypress"
+  # npm i cypress@^3.4.1 cypress-plugin-retries
+
   echo "Sleeping for $test_waitafterhealthy"
   sleep $test_waitafterhealthy # server is online a bit earlier most of the time (eg. with npm start)
   cd $base_dir/e2e
   {
-    echo "Running: CYPRESS_INITWAITTIME=$test_initwaittime CYPRESS_VISITPREFIX="$test_visitprefix" $setup_dir/../node_modules/.bin/cypress run --browser chrome --config baseUrl=$test_baseurl"
-    CYPRESS_VISITPREFIX="$test_visitprefix" $setup_dir/../node_modules/.bin/cypress run --browser chrome --config baseUrl=$test_baseurl
+
+    # We assume, Angular example is ran with `npm run build`
+    ng_example_modules="$base_dir/../../../test/e2e-test-application/node_modules"
+    if [[ ! -L $ng_example_modules ]] && [[ ! -d $ng_example_modules ]]; then
+      echo "Creating symlink for example node_modules";
+      ln -s "$base_dir/../../../node_modules" $ng_example_modules
+    fi
+    echo "Running: CYPRESS_INITWAITTIME=$test_initwaittime CYPRESS_VISITPREFIX="$test_visitprefix" $base_dir/../../../node_modules/.bin/cypress run --browser chrome --config baseUrl=$test_baseurl"
+    CYPRESS_VISITPREFIX="$test_visitprefix" $base_dir/../../../node_modules/.bin/cypress run --browser chrome --config baseUrl=$test_baseurl
   } || {
     echoe "E2E failed for $test_name"
     killpids
