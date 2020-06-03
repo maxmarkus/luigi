@@ -1,18 +1,18 @@
 Cypress.env('RETRIES', 1);
 describe('Basic tests', () => {
   beforeEach(() => {
-    cy.visit('/');
+    const basepath = Cypress.env('VISITPREFIX') || '';
+    cy.log(`Navigate to ${basepath}/`);
+    cy.visit(`${basepath}/`);
   });
   describe('Core & Client', () => {
     it('Verify dirty status and navigation', () => {
       cy.get('.fd-shellbar').should('be.visible');
-
-      cy.wait(100); // Luigi initialization takes its time
-      cy.getIframeWindow().then(win => {
-        cy.log('setDirtyStatus true');
+      cy.getIframeWithLuigiClient().then(win => {
+        cy.log('setDirtyStatus to true');
         win.LuigiClient.uxManager().setDirtyStatus(true);
+        cy.wait(150); // Post message processing time
       });
-      cy.wait(100); // Post message processing time
 
       cy.window().then(win => {
         cy.log('Trying to navigate away');

@@ -1,9 +1,17 @@
 [
   {
-    "name": "OpenUI5",
-    "script": "openui5.sh",
-    "baseurl": "http://127.0.0.1:8080/index.html",
-    "healthyurl": "http://127.0.0.1:8080/libs/luigi-core/luigi.js",
+    "name": "No framework",
+    "script": "no-framework.sh",
+    "baseurl": "http://127.0.0.1:8080",
+    "healthyurl": "http://127.0.0.1:8080/luigi-core/luigi.js",
+    "waitafterhealthy": 5,
+    "webserverport": 8080
+  },
+  {
+    "name": "Vue",
+    "script": "vue.sh",
+    "baseurl": "http://127.0.0.1:8080",
+    "healthyurl": "http://127.0.0.1:8080/luigi-core/luigi.js",
     "waitafterhealthy": 5,
     "webserverport": 8080
   },
@@ -16,14 +24,6 @@
     "webserverport": 3000
   },
   {
-    "name": "Vue",
-    "script": "vue.sh",
-    "baseurl": "http://127.0.0.1:8080",
-    "healthyurl": "http://127.0.0.1:8080/luigi-core/luigi.js",
-    "waitafterhealthy": 5,
-    "webserverport": 8080
-  },
-  {
     "name": "Angular",
     "script": "angular.sh",
     "baseurl": "http://127.0.0.1:4200",
@@ -32,10 +32,11 @@
     "webserverport": 4200
   },
   {
-    "name": "No framework",
-    "script": "no-framework.sh",
+    "name": "OpenUI5",
+    "script": "openui5.sh",
     "baseurl": "http://127.0.0.1:8080",
-    "healthyurl": "http://127.0.0.1:8080/luigi-core/luigi.js",
+    "visitprefix": "index.html#",
+    "healthyurl": "http://127.0.0.1:8080/libs/luigi-core/luigi.js",
     "waitafterhealthy": 5,
     "webserverport": 8080
   }

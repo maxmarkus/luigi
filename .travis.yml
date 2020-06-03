@@ -42,6 +42,13 @@ integration-testing: &integration-testing
     - rm -rf ~/.npm/_cacache
     - rm -rf ~/.cache/Cypress/cy/production/browsers #it is individual for each run anyway so caching it slows down the job
 
+nightly-example-testing: &nightly-example-testing
+    if: type = cron
+    script:
+      - $TRAVIS_BUILD_DIR/scripts/tools/verify-setup-scripts/verify-setup-scripts.sh 1
+    before_cache:
+      - rm -rf ~/.npm/_logs
+      - rm -rf ~/.npm/_cacache
 
 jobs:
   include:
@@ -148,3 +155,30 @@ jobs:
       before_cache:
         - rm -rf ~/.npm/_logs
         - rm -rf ~/.npm/_cacache
+
+    - name: 'No framework'
+      <<: *nightly-example-testing
+      script:
+        - $TRAVIS_BUILD_DIR/scripts/tools/verify-setup-scripts/verify-setup-scripts.sh 0
+
+    # - name: 'Vue'
+    #   # only working after merge
+    #   <<: *nightly-example-testing
+    #   script:
+    #     - $TRAVIS_BUILD_DIR/scripts/tools/verify-setup-scripts/verify-setup-scripts.sh 1
+
+    - name: 'React'
+      # not working because of development server not starting properly
+      <<: *nightly-example-testing
+      script:
+        - $TRAVIS_BUILD_DIR/scripts/tools/verify-setup-scripts/verify-setup-scripts.sh 2
+
+    - name: 'Angular'
+      <<: *nightly-example-testing
+      script:
+        - $TRAVIS_BUILD_DIR/scripts/tools/verify-setup-scripts/verify-setup-scripts.sh 3
+
+    - name: 'OpenUI5'
+      <<: *nightly-example-testing
+      script:
+        - $TRAVIS_BUILD_DIR/scripts/tools/verify-setup-scripts/verify-setup-scripts.sh 4

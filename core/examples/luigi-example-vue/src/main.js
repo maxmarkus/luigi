@@ -6,6 +6,7 @@ import store from './store';
 Vue.config.productionTip = false;
 
 import LuigiClient from '@luigi-project/client';
+window.LuigiClient = LuigiClient;
 
 Vue.mixin({
   created() {
