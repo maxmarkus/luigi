@@ -179,7 +179,10 @@ class RoutingClass {
 
       if (!viewUrl) {
         const defaultChildNode = await RoutingHelpers.getDefaultChildNode(
-          pathData, (async (node, ctx) => { return await Navigation.getChildren(node, ctx); })
+          pathData,
+          async (node, ctx) => {
+            return await Navigation.getChildren(node, ctx);
+          }
         );
 
         if (pathData.isExistingRoute) {
@@ -190,7 +193,7 @@ class RoutingClass {
             false
           );
           // reset comp data
-          component.set({ navigationPath : [] });
+          component.set({ navigationPath: [] });
         } else {
           if (defaultChildNode && pathData.navigationPath.length > 1) {
             //last path segment was invalid but a default node could be in its place
@@ -285,8 +288,6 @@ class RoutingClass {
         tabNav: tabNavInherited
       };
 
-
-
       component.set(
         Object.assign({}, newNodeData, {
           previousNodeValues: previousCompData
@@ -327,23 +328,28 @@ class RoutingClass {
         from cache with all its children.
       */
   checkInvalidateCache(previousCompData, newPath) {
-      let newPathArray = newPath.split('/');
-     if (previousCompData.navigationPath && previousCompData.navigationPath.length > 0) {
-       let previousNavPathWithoutRoot = previousCompData.navigationPath.slice(1);
+    let newPathArray = newPath.split('/');
+    if (
+      previousCompData.navigationPath &&
+      previousCompData.navigationPath.length > 0
+    ) {
+      let previousNavPathWithoutRoot = previousCompData.navigationPath.slice(1);
 
       let isSamePath = true;
       for (let i = 0; i < previousNavPathWithoutRoot.length; i++) {
-        let newPathSegment = newPathArray.length > i ? newPathArray[i] : undefined;
+        let newPathSegment =
+          newPathArray.length > i ? newPathArray[i] : undefined;
         let previousPathNode = previousNavPathWithoutRoot[i];
 
         if (newPathSegment !== previousPathNode.pathSegment || !isSamePath) {
           if (RoutingHelpers.isDynamicNode(previousPathNode)) {
-            if (!isSamePath ||
+            if (
+              !isSamePath ||
               newPathSegment !==
-              RoutingHelpers.getDynamicNodeValue(
-                previousPathNode,
-                previousCompData.pathParams
-              )
+                RoutingHelpers.getDynamicNodeValue(
+                  previousPathNode,
+                  previousCompData.pathParams
+                )
             ) {
               NodeDataManagementStorage.deleteNodesRecursively(
                 previousPathNode
@@ -354,7 +360,6 @@ class RoutingClass {
             isSamePath = false;
           }
         }
-
       }
     }
   }
@@ -415,7 +420,10 @@ class RoutingClass {
       //custom 404 handler is provided, use it
       const result = pageNotFoundHandler(notFoundPath, isAnyPathMatched);
       if (result && result.redirectTo) {
-        this.navigateTo(result.redirectTo);
+        // needs to be in next tick, else AngularJS or other routers trigger duplicate
+        setTimeout(() => {
+          this.navigateTo(result.redirectTo);
+        });
       }
       return;
     }
