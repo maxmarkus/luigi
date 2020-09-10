@@ -50,7 +50,7 @@ class DocSearchProvider {
       return {
         apiKey: '5ab04e0673d89f07c964afcf1522ad3a',
         indexName: 'luigi-project',
-        inputSelector: '[data-testid="luigi-search-input"]',
+        inputSelector: '[data-testid="luigi-search-input__no-handlers"]',
         autocompleteOptions: {
           debug: this.isDevelop,
           openOnFocus: true,
@@ -64,6 +64,9 @@ class DocSearchProvider {
       };
     };
     docsearch(createAlgoliaOptions());
+    setTimeout(() => {
+      document.querySelector('.algolia-autocomplete .ds-hint').style.display = 'none';
+    },0);
   }
 
   // attachHandlers() {

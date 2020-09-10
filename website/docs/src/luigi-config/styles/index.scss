@@ -104,7 +104,7 @@ $side-nav-width-mobile: 260px;
     span {
       font-weight: 600;
     }
-    
+
     .fd-shellbar__title {
       display: none;
     }
@@ -168,6 +168,7 @@ $side-nav-width-mobile: 260px;
         .fd-menu__item {
           padding: 15px 0;
           background-color: transparent;
+          line-height: 14px;
 
           &:hover,
           &:active,
@@ -175,7 +176,7 @@ $side-nav-width-mobile: 260px;
           &[aria-selected=true] {
             color: $primary-color;
           }
-          
+
           .fd-menu__link {
             &.is-hover,
             &:hover {
@@ -248,9 +249,9 @@ $side-nav-width-mobile: 260px;
       height: 69px;
       padding-bottom: 41px;
       margin-bottom: -41px;
-  
+
       span {
-  
+
         &:not(.fd-top-nav__icon) {
           color: white;
           font-size: 18px;
@@ -261,13 +262,13 @@ $side-nav-width-mobile: 260px;
           transition: all .2s ease;
         }
       }
-  
+
       .fd-top-nav__icon {
         &:before {
           margin-top: 0 !important;
         }
       }
-  
+
       &:hover,
       &.is-selected {
         span {
@@ -278,7 +279,7 @@ $side-nav-width-mobile: 260px;
       }
     }
   }
-  
+
   .fd-app__sidebar,
   .iframeContainer {
     top: $height-shellbar-mobile;
@@ -395,6 +396,7 @@ $side-nav-width-mobile: 260px;
 
   .fd-nested-list__item {
     padding: 10px 0;
+    line-height: 1.42857;
   }
 
   .fd-nested-list__group-header,
@@ -407,8 +409,8 @@ $side-nav-width-mobile: 260px;
     font-size: 15px;
     height: auto;
     padding: 1px 10px;
+    border: none;
     border-left: 2px solid transparent;
-    border-bottom: none;
 
     &:hover,
     &.is-selected {
@@ -433,26 +435,32 @@ $side-nav-width-mobile: 260px;
       font-size: 15px;
       white-space: normal;
       text-overflow: unset;
+      width: auto;
+      padding-right: 5px;
     }
 
     .fd-nested-list__icon {
       display: none;
     }
 
+    [class*=sap-icon] {
+      line-height: 1.55;
+      vertical-align: top;
+    }
   }
-  
+
   .lui-category {
     text-transform: uppercase;
     border: none;
     font-size: 12px;
-    padding: 8px 0;
+    padding: 12px 0;
     line-height: 1.42857;
     font-weight: 400;
     color: #6a6d70;
   }
 
-  .fd-side-nav {
-    width: $side-nav-width-desktop;
+  .fd-app__sidebar .fd-side-nav {
+    width: $side-nav-width-desktop !important;
     background-color: transparent;
     border-right: none;
 
@@ -506,14 +514,14 @@ $side-nav-width-mobile: 260px;
     .fd-side-nav {
       width: $side-nav-width-mobile;
     }
-  
+
     &.lui-simpleSlideInNav.lui-leftNavToggle {
       .fd-app__sidebar,
       .fd-side-nav {
         width: $side-nav-width-mobile;
       }
     }
-  
+
     &.lui-simpleSlideInNav .fd-app__sidebar {
       left: -$side-nav-width-mobile;
     }
