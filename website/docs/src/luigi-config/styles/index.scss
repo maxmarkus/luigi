@@ -396,7 +396,6 @@ $side-nav-width-mobile: 260px;
 
   .fd-nested-list__item {
     padding: 10px 0;
-    line-height: 1.42857;
   }
 
   .fd-nested-list__group-header,
@@ -432,11 +431,11 @@ $side-nav-width-mobile: 260px;
     }
 
     .fd-nested-list__title {
+      display: inline !important;
       font-size: 15px;
       white-space: normal;
       text-overflow: unset;
       width: auto;
-      padding-right: 5px;
     }
 
     .fd-nested-list__icon {
@@ -453,7 +452,7 @@ $side-nav-width-mobile: 260px;
     text-transform: uppercase;
     border: none;
     font-size: 12px;
-    padding: 12px 0;
+    padding: 8px 0;
     line-height: 1.42857;
     font-weight: 400;
     color: #6a6d70;
