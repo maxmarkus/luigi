@@ -172,8 +172,11 @@ class RoutingHelpersClass {
 
   getNodeHref(node, pathParams) {
     if (LuigiConfig.getConfigBooleanValue('navigation.addNavHrefs')) {
-      const link = RoutingHelpers.getRouteLink(node, pathParams,
-        LuigiConfig.getConfigValue('routing.useHashRouting')?"#":'');
+      const link = RoutingHelpers.getRouteLink(
+        node,
+        pathParams,
+        LuigiConfig.getConfigValue('routing.useHashRouting') ? '#' : ''
+      );
       return link.url || link;
     }
     return 'javascript:void(0)';
