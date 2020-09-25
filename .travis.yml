@@ -34,7 +34,7 @@ integration-testing: &integration-testing
         # Ubuntu 16+ does not install this dependency by default, so we need to install it ourselves
         - libgconf-2-4
         - libgbm-dev # needed for cypress 5.0.0
-        - libgbm # needed dependency for cypress 5.0.0
+        # - libgbm # needed dependency for cypress 5.0.0
         #- chromium-browser=79.0.3945.130-0ubuntu0.16.04.1 # update also if you upgrade from Xenial
     # chrome: beta
     chrome: stable
@@ -92,6 +92,8 @@ jobs:
       # run only when merging from release-v branch to master
     #   if: repo = SAP/luigi AND branch = master AND type = push
       script:
+        - cat $TRAVIS_BUILD_DIR/test/e2e-test-application/package.json
+        - cat $TRAVIS_BUILD_DIR/test/e2e-test-application/package-lock.json | grep -A 6 cypress
         # - bash -xv ./scripts/testCompatibility.sh --tag latest || travis_terminate 1 # to run with verbose mode
         - bash ./scripts/testCompatibility.sh --tag latest || travis_terminate 1
       before_cache:
